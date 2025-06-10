@@ -1,12 +1,11 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-// src/products/products.service.ts
-// src/products/products.service.ts
-// src/products/products.service.ts
-// src/products/products.service.ts
+import { Product } from './interfaces/product.interface';
+
 
 @Injectable()
+
 export class ProductsService implements OnModuleInit {
   private products: Array<{
     id: string;
@@ -18,18 +17,20 @@ export class ProductsService implements OnModuleInit {
 
   onModuleInit() {
     this.seedDemoProducts();
+
   }
 
   private seedDemoProducts() {
     if (this.products.length === 0) {
       for (let i = 1; i <= 5; i++) {
-        this.products.push({
+        const product: Product = {
           id: i.toString(),
           name: `Producto ${i}`,
           description: `Descripción del producto ${i}`,
           price: Math.floor(Math.random() * 100) + 1,
           stock: Math.floor(Math.random() * 50) + 1,
-        });
+        };
+        this.products.push(product);
       }
     }
   }
@@ -53,10 +54,11 @@ export class ProductsService implements OnModuleInit {
       (product) => product.id === id,
     );
     if (productIndex > -1) {
-      this.products[productIndex] = {
+      const updated: Product = {
         ...this.products[productIndex],
         ...updateProductDto,
       };
+      this.products[productIndex] = updated;
       return this.products[productIndex];
     }
     return null;
