@@ -1,24 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './interfaces/product.interface';
 
 
 @Injectable()
-export class ProductsService {
-  private products: Product[] = [];
 
-  create(createProductDto: CreateProductDto) {
-    const newProduct: Product = {
-      id: Date.now().toString(),
-      ...createProductDto,
-    };
-    this.products.push(newProduct);
-    return newProduct;
+export class ProductsService implements OnModuleInit {
+  private products: Array<{
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+  }> = [];
+
+  onModuleInit() {
+    this.seedDemoProducts();
+
   }
 
-  findAll() {
-    // Generar productos de prueba si la lista está vacía
+  private seedDemoProducts() {
     if (this.products.length === 0) {
       for (let i = 1; i <= 5; i++) {
         const product: Product = {
@@ -31,6 +33,15 @@ export class ProductsService {
         this.products.push(product);
       }
     }
+  }
+
+  create(createProductDto: CreateProductDto) {
+    const newProduct = { id: Date.now().toString(), ...createProductDto };
+    this.products.push(newProduct);
+    return newProduct;
+  }
+
+  findAll() {
     return this.products;
   }
 
