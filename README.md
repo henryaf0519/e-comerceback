@@ -25,7 +25,9 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Project setup
+## Installation
+
+Use npm to install project dependencies:
 
 ```bash
 $ npm install
