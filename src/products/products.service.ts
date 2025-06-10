@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from './interfaces/product.interface';
 // src/products/products.service.ts
 // src/products/products.service.ts
 // src/products/products.service.ts
@@ -8,16 +9,13 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
-  private products: Array<{
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    stock: number;
-  }> = [];
+  private products: Product[] = [];
 
   create(createProductDto: CreateProductDto) {
-    const newProduct = { id: Date.now().toString(), ...createProductDto };
+    const newProduct: Product = {
+      id: Date.now().toString(),
+      ...createProductDto,
+    };
     this.products.push(newProduct);
     return newProduct;
   }
@@ -26,13 +24,14 @@ export class ProductsService {
     // Generar productos de prueba si la lista está vacía
     if (this.products.length === 0) {
       for (let i = 1; i <= 5; i++) {
-        this.products.push({
+        const product: Product = {
           id: i.toString(),
           name: `Producto ${i}`,
           description: `Descripción del producto ${i}`,
           price: Math.floor(Math.random() * 100) + 1,
           stock: Math.floor(Math.random() * 50) + 1,
-        });
+        };
+        this.products.push(product);
       }
     }
     return this.products;
@@ -47,10 +46,11 @@ export class ProductsService {
       (product) => product.id === id,
     );
     if (productIndex > -1) {
-      this.products[productIndex] = {
+      const updated: Product = {
         ...this.products[productIndex],
         ...updateProductDto,
       };
+      this.products[productIndex] = updated;
       return this.products[productIndex];
     }
     return null;
