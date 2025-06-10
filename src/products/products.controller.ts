@@ -44,7 +44,7 @@ export class ProductsController {
   // Removes a product
   @Delete(':id')
   remove(@Param('id') id: string) {
-    this.productsService.remove(id);
-    return { deleted: true };
+    return this.productsService.remove(id);
+
   }
 }

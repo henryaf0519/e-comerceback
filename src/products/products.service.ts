@@ -1,4 +1,5 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './interfaces/product.interface';
@@ -53,7 +54,11 @@ export class ProductsService implements OnModuleInit {
 
   // Finds a product by id
   findOne(id: string) {
-    return this.products.find((product) => product.id === id);
+    const product = this.products.find((p) => p.id === id);
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    return product;
   }
 
   // Updates an existing product
@@ -61,19 +66,26 @@ export class ProductsService implements OnModuleInit {
     const productIndex = this.products.findIndex(
       (product) => product.id === id,
     );
-    if (productIndex > -1) {
-      const updated: Product = {
-        ...this.products[productIndex],
-        ...updateProductDto,
-      };
-      this.products[productIndex] = updated;
-      return this.products[productIndex];
+
+    if (productIndex === -1) {
+      throw new NotFoundException('Product not found');
+
     }
-    return null;
+    this.products[productIndex] = {
+      ...this.products[productIndex],
+      ...updateProductDto,
+    };
+    return this.products[productIndex];
   }
 
   // Deletes a product by id
   remove(id: string) {
-    this.products = this.products.filter((product) => product.id !== id);
+    const productIndex = this.products.findIndex(
+      (product) => product.id === id,
+    );
+    if (productIndex === -1) {
+      throw new NotFoundException('Product not found');
+    }
+    this.products.splice(productIndex, 1);
   }
 }
