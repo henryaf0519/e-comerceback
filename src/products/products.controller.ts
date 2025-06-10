@@ -41,6 +41,6 @@ export class ProductsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    this.productsService.remove(id);
+    return this.productsService.remove(id);
   }
 }
