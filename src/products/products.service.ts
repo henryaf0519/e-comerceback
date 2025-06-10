@@ -16,12 +16,14 @@ export class ProductsService {
     stock: number;
   }> = [];
 
+  // Saves a new product in memory
   create(createProductDto: CreateProductDto) {
     const newProduct = { id: Date.now().toString(), ...createProductDto };
     this.products.push(newProduct);
     return newProduct;
   }
 
+  // Returns all products, generating examples when empty
   findAll() {
     // Generar productos de prueba si la lista está vacía
     if (this.products.length === 0) {
@@ -38,10 +40,12 @@ export class ProductsService {
     return this.products;
   }
 
+  // Finds a product by id
   findOne(id: string) {
     return this.products.find((product) => product.id === id);
   }
 
+  // Updates an existing product
   update(id: string, updateProductDto: UpdateProductDto) {
     const productIndex = this.products.findIndex(
       (product) => product.id === id,
@@ -56,6 +60,7 @@ export class ProductsService {
     return null;
   }
 
+  // Deletes a product by id
   remove(id: string) {
     this.products = this.products.filter((product) => product.id !== id);
   }
